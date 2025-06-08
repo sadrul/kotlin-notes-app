@@ -1,9 +1,15 @@
 R_DEF: Internal format may change without notice
 local
-id addButton
+id btnAddItem
+id btnAddList
+id itemCheck
 id itemName
-id recyclerView
+id listName
+id recyclerViewItems
+id recyclerViewLists
+layout activity_list_detail
 layout activity_main
+layout item_row
 layout list_item
 string gcm_defaultSenderId
 string google_api_key

@@ -6,16 +6,22 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ShoppingAdapter(
-    private val list: List<String>,
+class ShoppingListAdapter(
+    private val lists: List<Pair<String, String>>,
+    private val onClick: (String, String) -> Unit,
     private val onLongClick: (String) -> Unit
-) : RecyclerView.Adapter<ShoppingAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<ShoppingListAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val itemName: TextView = view.findViewById(R.id.itemName)
+        val listName: TextView = view.findViewById(R.id.listName)
         init {
+            view.setOnClickListener {
+                val (id, name) = lists[adapterPosition]
+                onClick(id, name)
+            }
             view.setOnLongClickListener {
-                onLongClick(list[adapterPosition])
+                val (id, _) = lists[adapterPosition]
+                onLongClick(id)
                 true
             }
         }
@@ -27,9 +33,9 @@ class ShoppingAdapter(
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int = list.size
+    override fun getItemCount(): Int = lists.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemName.text = list[position]
+        holder.listName.text = lists[position].second
     }
 }

@@ -1,5 +1,6 @@
 package com.example.shoppinglist
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.widget.*
@@ -12,69 +13,85 @@ import com.google.firebase.firestore.FirebaseFirestore
 class MainActivity : AppCompatActivity() {
 
     private lateinit var db: FirebaseFirestore
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: ShoppingAdapter
-    private val items = ArrayList<String>()
+    private lateinit var listRecyclerView: RecyclerView
+    private lateinit var adapter: ShoppingListAdapter
+    private val shoppingLists = ArrayList<Pair<String, String>>() // Pair<docId, name>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         db = FirebaseFirestore.getInstance()
-        recyclerView = findViewById(R.id.recyclerView)
-        val addButton = findViewById<Button>(R.id.addButton)
+        listRecyclerView = findViewById(R.id.recyclerViewLists)
+        val addListBtn = findViewById<Button>(R.id.btnAddList)
 
-        adapter = ShoppingAdapter(items) { item -> deleteItem(item) }
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
+        adapter = ShoppingListAdapter(shoppingLists,
+            onClick = { docId, name ->
+                val intent = Intent(this, ListDetailActivity::class.java)
+                intent.putExtra("LIST_ID", docId)
+                intent.putExtra("LIST_NAME", name)
+                startActivity(intent)
+            },
+            onLongClick = { docId ->
+                showEditDeleteDialog(docId)
+            }
+        )
 
-        loadItems()
+        listRecyclerView.layoutManager = LinearLayoutManager(this)
+        listRecyclerView.adapter = adapter
 
-        addButton.setOnClickListener { showAddDialog() }
+        addListBtn.setOnClickListener { showAddListDialog() }
+
+        loadLists()
     }
 
-    private fun showAddDialog() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Add Item")
-
+    private fun showAddListDialog() {
         val input = EditText(this)
         input.inputType = InputType.TYPE_CLASS_TEXT
-        builder.setView(input)
 
-        builder.setPositiveButton("Add") { _, _ ->
-            val item = input.text.toString()
-            if (item.isNotEmpty()) {
-                addItem(item)
-            }
-        }
-
-        builder.setNegativeButton("Cancel", null)
-        builder.show()
-    }
-
-    private fun addItem(item: String) {
-        val itemMap = hashMapOf("name" to item)
-        db.collection("shoppingList").add(itemMap)
-    }
-
-    private fun deleteItem(item: String) {
-        db.collection("shoppingList")
-            .whereEqualTo("name", item)
-            .get()
-            .addOnSuccessListener { documents ->
-                for (doc in documents) {
-                    db.collection("shoppingList").document(doc.id).delete()
+        AlertDialog.Builder(this)
+            .setTitle("New List Name")
+            .setView(input)
+            .setPositiveButton("Add") { _, _ ->
+                val name = input.text.toString().trim()
+                if (name.isNotEmpty()) {
+                    db.collection("shoppingLists").add(mapOf("name" to name))
                 }
             }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
-    private fun loadItems() {
-        db.collection("shoppingList").addSnapshotListener { snapshot, _ ->
+    private fun showEditDeleteDialog(docId: String) {
+        val input = EditText(this)
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        val currentList = shoppingLists.find { it.first == docId }
+        input.setText(currentList?.second)
+
+        AlertDialog.Builder(this)
+            .setTitle("Edit or Delete List")
+            .setView(input)
+            .setPositiveButton("Save") { _, _ ->
+                val newName = input.text.toString().trim()
+                if (newName.isNotEmpty()) {
+                    db.collection("shoppingLists").document(docId)
+                        .update("name", newName)
+                }
+            }
+            .setNeutralButton("Delete") { _, _ ->
+                db.collection("shoppingLists").document(docId).delete()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun loadLists() {
+        db.collection("shoppingLists").addSnapshotListener { snapshot, _ ->
             if (snapshot != null) {
-                items.clear()
+                shoppingLists.clear()
                 for (doc in snapshot.documents) {
-                    val name = doc.getString("name")
-                    if (name != null) items.add(name)
+                    val name = doc.getString("name") ?: continue
+                    shoppingLists.add(doc.id to name)
                 }
                 adapter.notifyDataSetChanged()
             }

@@ -3183,7 +3183,6 @@ id action_text
 id actions
 id activity_chooser_view_content
 id add
-id addButton
 id adjust_height
 id adjust_width
 id alertTitle
@@ -3213,6 +3212,8 @@ id bounce
 id bounceBoth
 id bounceEnd
 id bounceStart
+id btnAddItem
+id btnAddList
 id buttonPanel
 id cache_measures
 id callMeasure
@@ -3345,6 +3346,7 @@ id invisible
 id inward
 id is_pooling_container_tag
 id italic
+id itemCheck
 id itemName
 id item_touch_helper_previous_elevation
 id jumpToEnd
@@ -3359,6 +3361,7 @@ id line1
 id line3
 id linear
 id listMode
+id listName
 id list_item
 id m3_side_sheet
 id marquee
@@ -3479,7 +3482,8 @@ id progress_horizontal
 id radio
 id ratio
 id rectangles
-id recyclerView
+id recyclerViewItems
+id recyclerViewLists
 id report_drawn
 id reverseSawtooth
 id right
@@ -3734,6 +3738,7 @@ layout abc_search_dropdown_item_icons_2line
 layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
+layout activity_list_detail
 layout activity_main
 layout custom_dialog
 layout design_bottom_navigation_item
@@ -3753,6 +3758,7 @@ layout design_text_input_end_icon
 layout design_text_input_start_icon
 layout ime_base_split_test_activity
 layout ime_secondary_split_test_activity
+layout item_row
 layout list_item
 layout m3_alert_dialog
 layout m3_alert_dialog_actions

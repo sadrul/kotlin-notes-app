@@ -25,16 +25,19 @@
         android:extractNativeLibs="false"
         android:label="Shopping List"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+        android:theme="@style/Theme.AppCompat.Light" >
         <activity
             android:name="com.example.shoppinglist.MainActivity"
-            android:exported="true" > <!-- ✅ REQUIRED FOR ANDROID 12+ -->
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.example.shoppinglist.ListDetailActivity"
+            android:exported="false" />
 
         <provider
             android:name="androidx.startup.InitializationProvider"

@@ -1,5 +1,13 @@
 [
     {
+        "merged": "com.example.shoppinglist.app-merged_res-36:/layout_item_row.xml.flat",
+        "source": "com.example.shoppinglist.app-main-38:/layout/item_row.xml"
+    },
+    {
+        "merged": "com.example.shoppinglist.app-merged_res-36:/layout_activity_list_detail.xml.flat",
+        "source": "com.example.shoppinglist.app-main-38:/layout/activity_list_detail.xml"
+    },
+    {
         "merged": "com.example.shoppinglist.app-merged_res-36:/layout_list_item.xml.flat",
         "source": "com.example.shoppinglist.app-main-38:/layout/list_item.xml"
     },
