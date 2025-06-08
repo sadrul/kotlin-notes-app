@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.example.shoppinglist.app-merged_res-36:/layout_list_item.xml.flat",
+        "source": "com.example.shoppinglist.app-main-38:/layout/list_item.xml"
+    },
+    {
+        "merged": "com.example.shoppinglist.app-merged_res-36:/layout_activity_main.xml.flat",
+        "source": "com.example.shoppinglist.app-main-38:/layout/activity_main.xml"
+    }
+]
